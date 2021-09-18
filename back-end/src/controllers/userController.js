@@ -47,5 +47,29 @@ export const SignupUser=async (req,res)=>{
         const {id}=newUser 
         console.log('newUser',newUser)
         console.log('id',id)
+
+        // JWT 
+        // JWT token is a string created by signing the payload with a private key
+
+        jwt.sign(
+            {
+                Id:id,
+                email,
+                Info:startingInfo,
+                isVerified:false
+            },
+            process.env.JWT_SECRET,
+            {
+                expiresIn:'2d'
+            },
+            (err,token)=>{
+                if(err){
+                    res.send(500).json({err})
+                }else{
+                    res.status(200).json({token})
+                }
+            }
+        )
+
     }
 }
