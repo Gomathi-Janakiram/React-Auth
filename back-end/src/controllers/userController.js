@@ -28,7 +28,7 @@ export const SignupUser=async (req,res)=>{
         // create a new entry
         const newUser=await new Users({
             email:email,
-            password:passwordHash,
+            passwordHash:passwordHash,
             Info:startingInfo,
             isVerified:false
         })
@@ -64,7 +64,7 @@ export const SignupUser=async (req,res)=>{
             },
             (err,token)=>{
                 if(err){
-                    res.send(500).json({err})
+                    res.status(500).json({err})
                 }else{
                     res.status(200).json({token})
                 }
@@ -72,4 +72,45 @@ export const SignupUser=async (req,res)=>{
         )
 
     }
+}
+
+
+export const LoginUser=async (req,res)=>{
+    const {email,password}=req.body;
+    const user=await Users.findOne({email:email})
+    if(!user){
+        res.status(401).json("User Not Found")
+    }else{
+        const {id,passwordHash,isVerified,Info}=user
+
+        const isPasswordCorrect=await bcrypt.compare(password,passwordHash)
+
+        if(isPasswordCorrect){
+            jwt.sign(
+                {
+                id,
+                email,
+                Info,
+                isVerified
+                },
+                process.env.JWT_SECRET,
+                {expiresIn:'2d'},
+                (err,token)=>{
+                    if(err){
+                        res.status(500).json({err})
+                    }else{
+                        res.status(200).json({token})
+                    }
+                }
+            )
+        }
+        else{
+            res.status(401).json('Password does not match')
+        }
+    }
+
+    
+
+    
+
 }
