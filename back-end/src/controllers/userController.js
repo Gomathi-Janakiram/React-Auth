@@ -39,38 +39,31 @@ export const SignupUser=async (req,res)=>{
                 console.log(err)
                 res.json({err})
             }else{
-                console.log(newUser)
-                res.status(200).json({success:`${email} Registered successfully`})
+                const {id}=newUser
+                // JWT 
+                // JWT token is a string created by signing the payload with a private key
+
+                jwt.sign(
+                    {
+                        Id:id,
+                        email,
+                        Info:startingInfo,
+                        isVerified:false
+                    },
+                    process.env.JWT_SECRET,
+                    {
+                        expiresIn:'2d'
+                    },
+                    (err,token)=>{
+                        if(err){
+                            res.status(500).json({err})
+                        }else{
+                            res.status(200).json({token})
+                        }
+                    }
+                )
             }
         })
-
-        const {id}=newUser 
-        console.log('newUser',newUser)
-        console.log('id',id)
-
-        // JWT 
-        // JWT token is a string created by signing the payload with a private key
-
-        jwt.sign(
-            {
-                Id:id,
-                email,
-                Info:startingInfo,
-                isVerified:false
-            },
-            process.env.JWT_SECRET,
-            {
-                expiresIn:'2d'
-            },
-            (err,token)=>{
-                if(err){
-                    res.status(500).json({err})
-                }else{
-                    res.status(200).json({token})
-                }
-            }
-        )
-
     }
 }
 
@@ -108,9 +101,4 @@ export const LoginUser=async (req,res)=>{
             res.status(401).json('Password does not match')
         }
     }
-
-    
-
-    
-
 }
