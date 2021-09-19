@@ -1,4 +1,4 @@
-import {SignupUser} from '../controllers/userController'
+import {SignupUser,LoginUser} from '../controllers/userController'
 
 const Routes=(app)=>{
     app.route('/')
@@ -9,6 +9,11 @@ const Routes=(app)=>{
     // sign-up route
     app.route('/api/signup')
         .post(SignupUser)
+
+    
+    // login route
+    app.route('/api/login')
+        .post(LoginUser)
 
     app.route('*')
         .get((req,res)=>{
