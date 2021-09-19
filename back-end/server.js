@@ -1,5 +1,6 @@
 import express from 'express';
 import mongoose from 'mongoose';
+import cors from 'cors'
 import Routes  from './src/routes/index';
 
 const PORT = process.env.PORT || 8080;
@@ -24,6 +25,11 @@ mongoose.connect("mongodb+srv://username:tZ5oK128XBbJXH6q@cluster0.4c39f.mongodb
 // This allows us to access the body of POST/PUT
 // requests in our route handlers (as req.body)
 app.use(express.json());
+
+
+// cors
+
+app.use(cors())
 
 // Add all the routes to our Express server
 // exported from routes/index.js
