@@ -5,6 +5,8 @@ import jwt from 'jsonwebtoken'
 
 const Users=mongoose.model("Users",userSchema)
 
+// SIGN UP
+
 export const SignupUser=async (req,res)=>{
     // destructuring user info
     const {email,password}=req.body;
@@ -68,6 +70,8 @@ export const SignupUser=async (req,res)=>{
 }
 
 
+// LOGIN
+
 export const LoginUser=async (req,res)=>{
     const {email,password}=req.body;
     const user=await Users.findOne({email:email})
@@ -101,4 +105,25 @@ export const LoginUser=async (req,res)=>{
             res.status(401).json('Password does not match')
         }
     }
+}
+
+
+// UPDATE USER INFO
+
+export const updateUserInfo=(req,res)=>{
+    const {authorization}=req.headers;
+
+    const {userId}=req.params;
+
+    const updates=({favouriteFood,hairColor,bio})=>({
+         favouriteFood,hairColor,bio
+    })(req.body)
+
+    if(!authorization){
+        return res.status(401).json({'No Authorization headers present'})
+    }else{
+        const token=authorization.split(' ')[1];
+        
+    }
+
 }
